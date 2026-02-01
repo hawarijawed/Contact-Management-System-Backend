@@ -17,6 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/contact")
+@CrossOrigin(origins = "http://localhost:5173")
 public class ContactControllers {
     private final ContactServices contactServices;
 
@@ -31,7 +32,7 @@ public class ContactControllers {
             return new ResponseEntity<>(contacts, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(contacts, HttpStatus.FOUND);
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -39,26 +40,17 @@ public class ContactControllers {
         return contactServices.addContact(contactDTO);
     }
 
-    @GetMapping("/search/")
+    @PostMapping("/search")
     public ResponseEntity<List<Contact>> searchContact(@RequestBody SearchNameDTO param){
         log.info("Search Parameter: "+param);
 
-        List<Contact> contacts = contactServices.searchContact(param);
-        if(contacts.isEmpty()){
-            return new ResponseEntity<>(contacts, HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(contacts, HttpStatus.FOUND);
+        return ResponseEntity.ok(contactServices.searchContact(param));
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Long id){
-        boolean flag = contactServices.deleteContactById(id);
-        if(flag){
-            return new ResponseEntity<>("Contact deleted", HttpStatus.ACCEPTED);
-        }
-
-        return new ResponseEntity<>("Failure occured", HttpStatus.BAD_REQUEST);
+        contactServices.deleteContactById(id);
+        return ResponseEntity.ok("Contact deleted");
     }
 
     @DeleteMapping("/delete")
