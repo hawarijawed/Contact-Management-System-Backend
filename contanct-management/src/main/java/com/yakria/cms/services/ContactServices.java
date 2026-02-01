@@ -1,6 +1,7 @@
 package com.yakria.cms.services;
 
 import com.yakria.cms.dtos.ContactDTO;
+import com.yakria.cms.dtos.UpdateContactDTO;
 import com.yakria.cms.models.Contact;
 import com.yakria.cms.repositories.ContactRepository;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,24 @@ public class ContactServices {
 
         contactRepository.deleteAll();
         return true;
+    }
+
+    public Contact updateContact(Long id, UpdateContactDTO updateContactDTO){
+        try{
+            Contact contact = contactRepository.findById(id).orElse(null);
+            if(contact == null){
+                return null;
+            }
+            if(updateContactDTO.getFirstName() != null && !updateContactDTO.getFirstName().isBlank()){
+                contact.setFirstName(updateContactDTO.getFirstName());
+            }
+
+            if(updateContactDTO.getLastName() != null && !updateContactDTO.getFirstName().isBlank()){
+                contact.setFirstName(updateContactDTO.getFirstName());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

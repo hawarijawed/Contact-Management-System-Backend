@@ -6,7 +6,7 @@
 #
 #  data:
 #    mongodb:
-#      uri: mongodb+srv://hawarijawed143_db_user:M7W8lbvcfjSrhZ3W@cluster0.az6hqeh.mongodb.net/?appName=Cluster0
+#      uri:
 ##      mongodb.net/contactdb?retryWrites=true&w=majority
 spring:
   datasource:

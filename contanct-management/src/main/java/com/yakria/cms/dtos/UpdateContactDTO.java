@@ -6,7 +6,8 @@ import java.util.List;
 
 @Data
 public class UpdateContactDTO {
-    private String name;
+    private String firstName;
+    private String lastName;
     private String email;
     private String contact;
     private String notes;

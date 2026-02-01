@@ -2,6 +2,7 @@ package com.yakria.cms.controllers;
 
 import com.yakria.cms.dtos.ContactDTO;
 import com.yakria.cms.dtos.SearchNameDTO;
+import com.yakria.cms.dtos.UpdateContactDTO;
 import com.yakria.cms.models.Contact;
 import com.yakria.cms.services.ContactServices;
 import lombok.extern.slf4j.Slf4j;
@@ -67,5 +68,10 @@ public class ContactControllers {
         }
 
         return new ResponseEntity<>("Failure occured", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody UpdateContactDTO updateContactDTO){
+
     }
 }
