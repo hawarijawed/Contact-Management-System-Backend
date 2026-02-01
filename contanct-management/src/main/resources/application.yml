@@ -1,0 +1,28 @@
+#dotenv:
+#  enabled: true
+#spring:
+#  application:
+#    name: contanct-management
+#
+#  data:
+#    mongodb:
+#      uri: mongodb+srv://hawarijawed143_db_user:M7W8lbvcfjSrhZ3W@cluster0.az6hqeh.mongodb.net/?appName=Cluster0
+##      mongodb.net/contactdb?retryWrites=true&w=majority
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/contactdb
+    username: cms_user
+    password: cms_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # use validate in prod
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
