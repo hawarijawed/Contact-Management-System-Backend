@@ -26,13 +26,14 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     List<Contact> findByCompanyContainingIgnoreCase(String company);
 
     @Query(
-            value = "SELECT * FROM contacts c WHERE c.tags && :tags",
+            value = "SELECT * FROM contacts c WHERE c.tags && CAST(:tags AS text[])",
             nativeQuery = true
     )
     List<Contact> findByTags(@Param("tags") String[] tags);
 
     List<Contact> findByFirstNameIgnoreCaseContaining(String firstName);
     List<Contact> findByLastNameIgnoreCaseContaining(String lastName);
+    Contact findByContact(String contact);
 
 //    void deleteByEmail(String email);
 }

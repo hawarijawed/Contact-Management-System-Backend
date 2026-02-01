@@ -10,5 +10,6 @@ public class SearchNameDTO {
     private String lastName;
     private String email;
     private List<String> tags;
+    private String contact;
     private String company;
 }

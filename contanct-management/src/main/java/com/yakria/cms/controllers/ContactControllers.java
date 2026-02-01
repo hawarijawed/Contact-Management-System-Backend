@@ -5,6 +5,7 @@ import com.yakria.cms.dtos.SearchNameDTO;
 import com.yakria.cms.dtos.UpdateContactDTO;
 import com.yakria.cms.models.Contact;
 import com.yakria.cms.services.ContactServices;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class ContactControllers {
     }
 
     @PostMapping("/add")
-    public ContactDTO addContact(@Validated @RequestBody ContactDTO contactDTO){
+    public ContactDTO addContact(@RequestBody @Valid ContactDTO contactDTO){
         return contactServices.addContact(contactDTO);
     }
 
@@ -42,7 +43,7 @@ public class ContactControllers {
     public ResponseEntity<List<Contact>> searchContact(@RequestBody SearchNameDTO param){
         log.info("Search Parameter: "+param);
 
-        List<Contact> contacts = contactServices.searchContact(param.getFirstName(), param.getLastName(), param.getEmail(), param.getTags(), param.getCompany());
+        List<Contact> contacts = contactServices.searchContact(param);
         if(contacts.isEmpty()){
             return new ResponseEntity<>(contacts, HttpStatus.NOT_FOUND);
         }
@@ -72,6 +73,11 @@ public class ContactControllers {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody UpdateContactDTO updateContactDTO){
+        Contact contact = contactServices.updateContact(id, updateContactDTO);
+        if(contact != null){
+            return new ResponseEntity<>(contact, HttpStatus.ACCEPTED);
+        }
 
+        return new ResponseEntity<>("Error occured", HttpStatus.BAD_REQUEST);
     }
 }

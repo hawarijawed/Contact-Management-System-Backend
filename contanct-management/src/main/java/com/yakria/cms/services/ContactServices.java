@@ -1,6 +1,7 @@
 package com.yakria.cms.services;
 
 import com.yakria.cms.dtos.ContactDTO;
+import com.yakria.cms.dtos.SearchNameDTO;
 import com.yakria.cms.dtos.UpdateContactDTO;
 import com.yakria.cms.models.Contact;
 import com.yakria.cms.repositories.ContactRepository;
@@ -43,28 +44,31 @@ public class ContactServices {
         return contactRepository.findAll();
     }
 
-    public List<Contact> searchContact(String first, String last, String email, List<String> tags, String company){
+    public List<Contact> searchContact(SearchNameDTO searchNameDTO){
         Set<Contact> results = new HashSet<>();
 
-        if (first != null && !first.isBlank()) {
-            results.addAll(contactRepository.findByFirstNameIgnoreCaseContaining(first));
+        if (searchNameDTO.getFirstName() != null && !searchNameDTO.getFirstName().isBlank()) {
+            results.addAll(contactRepository.findByFirstNameIgnoreCaseContaining(searchNameDTO.getFirstName()));
         }
 
-        if (last != null && !last.isBlank()) {
-            results.addAll(contactRepository.findByLastNameIgnoreCaseContaining(last));
+        if (searchNameDTO.getLastName() != null && !searchNameDTO.getLastName().isBlank()) {
+            results.addAll(contactRepository.findByLastNameIgnoreCaseContaining(searchNameDTO.getLastName()));
         }
 
-        if(email != null && !email.isBlank()){
-            results.add(contactRepository.findByEmailContainingIgnoreCase(email));
+        if(searchNameDTO.getEmail() != null && !searchNameDTO.getEmail().isBlank()){
+            results.add(contactRepository.findByEmailContainingIgnoreCase(searchNameDTO.getEmail()));
         }
 
-        if(company != null && !company.isBlank()){
-            results.addAll(contactRepository.findByCompanyContainingIgnoreCase(company));
+        if(searchNameDTO.getCompany() != null && !searchNameDTO.getCompany().isBlank()){
+            results.addAll(contactRepository.findByCompanyContainingIgnoreCase(searchNameDTO.getCompany()));
         }
 
-        if(!tags.isEmpty()){
-            String[] tagsArray = tags.toArray(new String[0]);
-            results.addAll(contactRepository.findByTags(tagsArray));
+        if(searchNameDTO.getContact() != null && !searchNameDTO.getContact().isBlank() && searchNameDTO.getContact().length() == 10){
+            results.add(contactRepository.findByContact(searchNameDTO.getContact()));
+        }
+        if (searchNameDTO.getTags() != null && !searchNameDTO.getTags().isEmpty()) {
+            String[] tagsArray = searchNameDTO.getTags().toArray(new String[0]);
+            return contactRepository.findByTags(tagsArray);
         }
 
         return new ArrayList<>(results);
@@ -99,9 +103,31 @@ public class ContactServices {
                 contact.setFirstName(updateContactDTO.getFirstName());
             }
 
-            if(updateContactDTO.getLastName() != null && !updateContactDTO.getFirstName().isBlank()){
-                contact.setFirstName(updateContactDTO.getFirstName());
+            if(updateContactDTO.getLastName() != null && !updateContactDTO.getLastName().isBlank()){
+                contact.setLastName(updateContactDTO.getFirstName());
             }
+
+            if(updateContactDTO.getEmail() != null && !updateContactDTO.getEmail().isBlank()){
+                contact.setEmail(updateContactDTO.getEmail());
+            }
+
+            if(updateContactDTO.getCompany() != null && !updateContactDTO.getCompany().isBlank()){
+                contact.setCompany(updateContactDTO.getCompany());
+            }
+
+            if(updateContactDTO.getContact() != null && !updateContactDTO.getContact().isBlank()){
+                contact.setContact(updateContactDTO.getContact());
+            }
+
+            if(updateContactDTO.getTags() != null && !updateContactDTO.getTags().isEmpty()){
+                HashSet<String> tags = new HashSet<>(updateContactDTO.getTags());
+                tags.addAll(contact.getTags());
+                contact.setTags(new ArrayList<>(tags));
+            }
+
+            contactRepository.save(contact);
+            return contact;
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
